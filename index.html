@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Súper Guía - Prototipo Alta Resolución</title>
+    <style>
+        :root {
+            --azul: #4285F4;
+            --verde: #34A853;
+            --amarillo: #FBBC05;
+            --gris-fondo: #f1f3f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--gris-fondo);
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; /* Centra la app en PC */
+            align-items: center; min-height: 100vh;
+        }
+
+        /* Contenedor tipo "Teléfono" para PC y Móvil */
+        .app-card {
+            width: 100%;
+            max-width: 450px; /* Evita que se estire en PC */
+            height: 90vh;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 8px solid #333; /* Marco decorativo */
+        }
+
+        header {
+            background: white; padding: 20px;
+            text-align: center; border-bottom: 2px solid #eee;
+        }
+
+        h1 { font-size: 22px; margin: 0; color: var(--azul); }
+
+        .content {
+            flex: 1; display: flex; flex-direction: column;
+            padding: 15px; gap: 15px; overflow: hidden;
+        }
+
+        /* Rejilla de productos corregida */
+        .grid-productos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .btn-prod {
+            background: white; border: 2px solid #ddd;
+            border-radius: 15px; padding: 12px 5px;
+            font-size: 14px; font-weight: bold;
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .btn-prod span { font-size: 28px; margin-bottom: 5px; }
+        .btn-prod.active { border-color: var(--azul); background: #e8f0fe; transform: scale(1.05); }
+
+        /* Área del Mapa */
+        #map-wrapper {
+            flex: 1; background: #fff;
+            border-radius: 20px; border: 2px solid #eee;
+            position: relative; overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+
+        .instrucciones {
+            background: #fff9c4; padding: 15px;
+            border-radius: 15px; border-left: 8px solid var(--amarillo);
+            font-size: 16px; font-weight: bold; text-align: center;
+        }
+
+        /* Modal de llegada */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none;
+            justify-content: center; align-items: center; z-index: 2000;
+        }
+
+        .modal-box {
+            background: white; padding: 30px; border-radius: 25px;
+            text-align: center; width: 80%; max-width: 320px;
+        }
+
+        .btn-ok { 
+            background: var(--verde); color: white; border: none; 
+            padding: 15px; border-radius: 12px; width: 100%;
+            font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <header><h1>🛒 Guía Súper Fácil</h1></header>
+
+    <div class="content">
+        <div class="grid-productos">
+            <button class="btn-prod" onclick="seleccionar('pan', this)"><span>🍞</span>Pan</button>
+            <button class="btn-prod" onclick="seleccionar('leche', this)"><span>🥛</span>Leche</button>
+            <button class="btn-prod" onclick="seleccionar('fruta', this)"><span>🍎</span>Frutas</button>
+            <button class="btn-prod" onclick="seleccionar('carne', this)"><span>🥩</span>Carne</button>
+            <button class="btn-prod" onclick="seleccionar('limp', this)"><span>🧽</span>Aseo</button>
+            <button class="btn-prod" onclick="seleccionar('salud', this)"><span>💊</span>Salud</button>
+        </div>
+
+        <div id="map-wrapper">
+            <canvas id="mapa"></canvas>
+        </div>
+
+        <div id="info" class="instrucciones">
+            Toca un producto para comenzar.
+        </div>
+    </div>
+</div>
+
+<div id="modalLlegada" class="modal">
+    <div class="modal-box">
+        <h2 style="color:var(--verde); margin-top:0;">¡LLEGÓ! 🎯</h2>
+        <p>El producto está justo frente a usted.</p>
+        <button class="btn-ok" onclick="cerrar()">Aceptar</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('mapa');
+    const ctx = canvas.getContext('2d');
+    const modal = document.getElementById('modalLlegada');
+    const info = document.getElementById('info');
+
+    let userPos = { x: 300, y: 550 };
+    let destino = null;
+
+    const puntos = {
+        pan: { x: 120, y: 120 }, leche: { x: 480, y: 120 },
+        fruta: { x: 300, y: 280 }, carne: { x: 120, y: 420 },
+        limp: { x: 480, y: 420 }, salud: { x: 300, y: 100 }
+    };
+
+    function init() {
+        // Resolución interna para que no se vea borroso ni estirado
+        canvas.width = 600; 
+        canvas.height = 600;
+        dibujar();
+    }
+
+    function dibujar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Dibujo de pasillos (rectángulos grises)
+        ctx.fillStyle = "#eeeeee";
+        [[80,180,100,280], [250,180,100,280], [420,180,100,280]].forEach(p => {
+            ctx.fillRect(p[0], p[1], p[2], p[3]);
+        });
+
+        // Dibujo de la Ruta amarilla
+        if (destino) {
+            ctx.beginPath();
+            ctx.moveTo(userPos.x, userPos.y);
+            ctx.lineTo(userPos.x, destino.y + 40);
+            ctx.lineTo(destino.x, destino.y + 40);
+            ctx.lineTo(destino.x, destino.y);
+            ctx.strokeStyle = "#FBBC05";
+            ctx.lineWidth = 15;
+            ctx.lineJoin = "round";
+            ctx.stroke();
+            ctx.font = "40px Arial";
+            ctx.fillText("📍", destino.x - 20, destino.y + 10);
+        }
+
+        // Punto Azul del Usuario (TÚ)
+        ctx.beginPath();
+        ctx.arc(userPos.x, userPos.y, 25, 0, Math.PI*2);
+        ctx.fillStyle = "#4285F4";
+        ctx.fill();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 5;
+        ctx.stroke();
+        ctx.fillStyle = "white";
+        ctx.font = "bold 18px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("TÚ", userPos.x, userPos.y + 7);
+    }
+
+    function seleccionar(id, btn) {
+        destino = puntos[id];
+        document.querySelectorAll('.btn-prod').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        info.innerText = "Siga la ruta marcada en amarillo.";
+        dibujar();
+    }
+
+    // Función unificada para mover el punto (PC y Móvil)
+    function mover(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        userPos.x = (clientX - rect.left) * scaleX;
+        userPos.y = (clientY - rect.top) * scaleY;
+        
+        if (destino) {
+            const d = Math.sqrt(Math.pow(userPos.x - destino.x, 2) + Math.pow(userPos.y - destino.y, 2));
+            if (d < 50) {
+                modal.style.display = "flex";
+                destino = null;
+            }
+        }
+        dibujar();
+    }
+
+    // Eventos
+    canvas.addEventListener('mousedown', (e) => mover(e.clientX, e.clientY));
+    canvas.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        mover(touch.clientX, touch.clientY);
+    });
+
+    window.onload = init;
+
+    function cerrar() {
+        modal.style.display = "none";
+        document.querySelectorAll('.btn-prod').forEach(b => b.classList.remove('active'));
+        info.innerText = "Seleccione otro producto.";
+        dibujar();
+    }
+</script>
+</body>
+</html>
