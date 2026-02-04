@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Súper Guía Inteligente - Prototipo Pro</title>
+    <title>Súper Guía Pro - Descuentos y Mapa</title>
     <style>
         :root {
             --bg: #e0e5ec;
@@ -11,7 +11,7 @@
             --light: #ffffff;
             --accent: #1a73e8;
             --danger: #d93025;
-            --success: #1e8e3e;
+            --promo: #ff9800;
         }
 
         body { 
@@ -31,12 +31,6 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; 
         }
 
-        .welcome-card {
-            background: var(--bg); padding: 30px; border-radius: 30px;
-            box-shadow: 9px 9px 16px var(--shadow), -9px -9px 16px var(--light);
-            margin-bottom: 30px;
-        }
-
         .btn-comenzar { 
             background: var(--bg); color: var(--accent); border: none; padding: 20px 40px; 
             border-radius: 50px; font-size: 24px; font-weight: 800; cursor: pointer;
@@ -50,36 +44,34 @@
         }
 
         .btn-sos {
-            background: var(--danger); color: white; border: 3px solid #b22222;
+            background: var(--danger); color: white; border: none;
             padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 0 #7b1710;
         }
 
-        /* SECCIÓN NOVEDOSA: LISTA DE COMPRAS */
-        .lista-compras {
-            background: #f1f5f9; padding: 10px 15px; height: 60px;
-            display: flex; align-items: center; gap: 10px; overflow-x: auto;
-            border-bottom: 2px solid var(--shadow);
+        /* NOVEDAD: SECCIÓN DE DESCUENTOS */
+        .seccion-promos {
+            background: #fff3e0; padding: 10px; border-bottom: 3px dashed var(--promo);
+            display: flex; flex-direction: column; gap: 8px;
         }
-        .item-lista {
-            background: white; padding: 5px 12px; border-radius: 20px;
-            font-size: 14px; font-weight: bold; border: 1px solid var(--accent);
-            white-space: nowrap; display: flex; align-items: center; gap: 5px;
+        .promo-card {
+            background: white; border: 2px solid var(--promo); border-radius: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
+        .promo-tag { background: var(--promo); color: white; padding: 4px 8px; border-radius: 5px; font-weight: bold; font-size: 14px; }
 
-        /* GRILLA DE PRODUCTOS AMPLIADA */
+        /* GRILLA PRODUCTOS */
         .grid { 
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
-            padding: 15px; max-height: 220px; overflow-y: auto;
+            padding: 15px; max-height: 180px; overflow-y: auto;
         }
-        
         .btn-prod {
             background: var(--bg); border: none; border-radius: 15px; padding: 12px 5px;
             box-shadow: 4px 4px 8px var(--shadow), -4px -4px 8px var(--light);
             display: flex; flex-direction: column; align-items: center; font-weight: bold;
             cursor: pointer; font-size: 13px;
         }
-        .btn-prod span { font-size: 24px; margin-bottom: 4px; }
         .btn-prod.active { box-shadow: inset 4px 4px 8px var(--shadow), inset -4px -4px 8px var(--light); color: var(--accent); }
 
         /* MAPA */
@@ -90,14 +82,12 @@
         }
         canvas { width: 100%; height: 100%; display: block; }
 
-        /* MODALES */
         .modal { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 200; 
         }
         .modal-box { 
             background: var(--bg); padding: 30px; border-radius: 30px; text-align: center; width: 80%;
-            box-shadow: 10px 10px 30px #000; border: 1px solid var(--light);
         }
         .btn-ok { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; margin-top: 15px; }
     </style>
@@ -106,63 +96,59 @@
 
     <div class="app">
         <div id="inicio">
-            <div class="welcome-card">
-                <div style="font-size: 60px;">🛒</div>
-                <h1 style="color: #2c3e50;">¡Bienvenido!</h1>
-                <p>Tu asistente para comprar sin cansarte.</p>
-            </div>
+            <div style="font-size: 60px;">🛒</div>
+            <h1 style="color: #2c3e50;">¡Bienvenido!</h1>
+            <p>Ahorra y compra fácil hoy.</p>
             <button class="btn-comenzar" onclick="empezar()">COMENZAR</button>
         </div>
 
         <header>
-            <div style="font-weight: 900; color: #2c3e50;">SUPER-GUÍA </div>
+            <div style="font-weight: 900; color: #2c3e50;">SUPER-GUÍA</div>
             <button class="btn-sos" onclick="showModal('popSos')">🆘 AYUDA</button>
         </header>
 
-        <div class="lista-compras" id="listaVisual">
-            <span style="color: #64748b; font-size: 14px;">Lista:</span>
+        <div class="seccion-promos">
+            <div style="font-weight: bold; color: var(--promo); font-size: 14px;">🔥 OFERTAS DEL DÍA:</div>
+            <div class="promo-card" onclick="select('pan', this)">
+                <span>🍞 Pan de Molde</span>
+                <span class="promo-tag">-20%</span>
             </div>
+            <div class="promo-card" onclick="select('leche', this)">
+                <span>🥛 Leche Entera</span>
+                <span class="promo-tag">2x1</span>
+            </div>
+        </div>
 
         <div class="grid">
             <button class="btn-prod" onclick="select('pan',this)"><span>🍞</span>Pan</button>
-            <button class="btn-prod" onclick="select('leche',this)"><span>🥛</span>Lácteos</button>
+            <button class="btn-prod" onclick="select('leche',this)"><span>🥛</span>Leche</button>
             <button class="btn-prod" onclick="select('fruta',this)"><span>🍎</span>Frutas</button>
             <button class="btn-prod" onclick="select('carne',this)"><span>🥩</span>Carnes</button>
             <button class="btn-prod" onclick="select('limp',this)"><span>🧽</span>Aseo</button>
             <button class="btn-prod" onclick="select('bebida',this)"><span>🥤</span>Bebidas</button>
-            <button class="btn-prod" onclick="select('congelados',this)"><span>🍦</span>Helados</button>
-            <button class="btn-prod" onclick="select('mascotas',this)"><span>🐶</span>Mascotas</button>
-            <button class="btn-prod" onclick="select('snack',this)"><span>🍿</span>Snacks</button>
         </div>
 
         <div id="map-area"><canvas id="cv"></canvas></div>
-
-        <div style="padding:10px; text-align:center; font-weight:bold; color:#5d707f; font-size: 13px;">
-            Toque el mapa para caminar hacia el producto
-        </div>
     </div>
 
     <div id="popWin" class="modal"><div class="modal-box">
-        <h2 style="color:var(--success)">📍 ¡LLEGASTE!</h2>
+        <h2 style="color:green">📍 ¡LLEGASTE!</h2>
         <p id="msgLlegada"></p>
         <button class="btn-ok" onclick="closeModal()">LISTO</button>
     </div></div>
 
     <div id="popSos" class="modal"><div class="modal-box">
         <h2 style="color:var(--danger)">🆘 AYUDA</h2>
-        <p>Quédate donde estás. Un asistente va en camino.</p>
+        <p>Un asistente va en camino.</p>
         <button class="btn-ok" style="background:#64748b" onclick="closeModal()">CERRAR</button>
     </div></div>
 
     <script>
         const canvas = document.getElementById('cv'); const ctx = canvas.getContext('2d');
-        const listaVisual = document.getElementById('listaVisual');
         let pos = { x: 300, y: 550 }; let target = null;
-
         const pts = { 
             pan:{x:100,y:100,n:"Pan"}, leche:{x:500,y:100,n:"Lácteos"}, fruta:{x:300,y:250,n:"Frutas"}, 
-            carne:{x:100,y:350,n:"Carnes"}, limp:{x:500,y:350,n:"Limpieza"}, bebida:{x:300,y:100,n:"Bebidas"},
-            congelados:{x:100,y:230,n:"Congelados"}, mascotas:{x:500,y:230,n:"Mascotas"}, snack:{x:300,y:400,n:"Snacks"}
+            carne:{x:100,y:350,n:"Carnes"}, limp:{x:500,y:350,n:"Limpieza"}, bebida:{x:300,y:100,n:"Bebidas"}
         };
 
         function empezar() { document.getElementById('inicio').style.display='none'; init(); }
@@ -173,24 +159,16 @@
 
         function draw() {
             ctx.clearRect(0,0,600,600);
-            ctx.strokeStyle="#f1f5f9"; ctx.lineWidth=1;
-            for(let i=0;i<600;i+=40){ ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,600);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(600,i);ctx.stroke(); }
-            
-            // Góndolas
-            ctx.fillStyle="#cbd5e1"; 
+            ctx.fillStyle="#eee"; 
             [[60,140,100,280],[250,140,100,280],[440,140,100,280]].forEach(s=>{
-                ctx.fillRect(s[0]+5,s[1]+5,s[2],s[3]); ctx.fillStyle="white";
-                ctx.fillRect(s[0],s[1],s[2],s[3]); ctx.strokeStyle="#94a3b8";
-                ctx.lineWidth=2; ctx.strokeRect(s[0],s[1],s[2],s[3]);
-                ctx.fillStyle="#cbd5e1";
+                ctx.fillRect(s[0],s[1],s[2],s[3]);
+                ctx.strokeStyle="#94a3b8"; ctx.strokeRect(s[0],s[1],s[2],s[3]);
             });
-
             if(target){
                 ctx.beginPath();ctx.moveTo(pos.x,pos.y);ctx.lineTo(pos.x,target.y+40);ctx.lineTo(target.x,target.y+40);ctx.lineTo(target.x,target.y);
-                ctx.strokeStyle="#fbbf24"; ctx.lineWidth=14; ctx.lineJoin="round"; ctx.stroke();
+                ctx.strokeStyle="#fbbf24"; ctx.lineWidth=15; ctx.lineJoin="round"; ctx.stroke();
                 ctx.font="40px Arial"; ctx.fillText("📍",target.x-20,target.y+10);
             }
-
             ctx.beginPath(); ctx.arc(pos.x,pos.y,25,0,Math.PI*2); ctx.fillStyle="#1a73e8"; ctx.fill();
             ctx.strokeStyle="white"; ctx.lineWidth=5; ctx.stroke();
             ctx.fillStyle="white"; ctx.font="bold 16px Arial"; ctx.textAlign="center"; ctx.fillText("TÚ",pos.x,pos.y+6);
@@ -199,16 +177,7 @@
         function select(id, b) { 
             target = pts[id];
             document.querySelectorAll('.btn-prod').forEach(x=>x.classList.remove('active'));
-            b.classList.add('active');
-            
-            // Añadir a lista visual si no está
-            if(!document.getElementById('item-'+id)){
-                const span = document.createElement('span');
-                span.id = 'item-'+id;
-                span.className = 'item-lista';
-                span.innerHTML = `${b.innerText} <small onclick="this.parentElement.remove()">✕</small>`;
-                listaVisual.appendChild(span);
-            }
+            if(b.tagName === 'BUTTON') b.classList.add('active');
             draw(); 
         }
 
@@ -216,13 +185,11 @@
             const r = canvas.getBoundingClientRect(); 
             pos.x = (cx-r.left)*(600/r.width); pos.y = (cy-r.top)*(600/r.height);
             if(target && Math.sqrt((pos.x-target.x)**2+(pos.y-target.y)**2)<50){
-                document.getElementById('msgLlegada').innerText = `Has llegado a la sección de ${target.n}.`;
-                showModal('popWin');
-                target = null;
+                document.getElementById('msgLlegada').innerText = `Estás en ${target.n}.`;
+                showModal('popWin'); target = null;
             }
             draw();
         }
-
         canvas.addEventListener('mousedown',e=>move(e.clientX,e.clientY));
         canvas.addEventListener('touchstart',e=>{e.preventDefault(); move(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
     </script>
