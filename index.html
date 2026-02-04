@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Súper Guía Premium - ESPOL</title>
+    <title>Súper Guía Inteligente - Prototipo Pro</title>
     <style>
         :root {
             --bg: #e0e5ec;
@@ -11,22 +11,21 @@
             --light: #ffffff;
             --accent: #1a73e8;
             --danger: #d93025;
+            --success: #1e8e3e;
         }
 
         body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: #2c3e50; 
-            margin: 0; display: flex; justify-content: center; height: 100vh; overflow: hidden;
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            background: #1e293b; margin: 0; display: flex; justify-content: center; height: 100vh; overflow: hidden;
         }
 
-        /* Contenedor con Neumorfismo (Efecto de relieve físico) */
         .app { 
-            width: 100vw; max-width: 450px; background: var(--bg); 
+            width: 100vw; max-width: 480px; background: var(--bg); 
             display: flex; flex-direction: column; position: relative;
-            box-shadow: 20px 20px 60px #1a2530, -20px -20px 60px #3e5770;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* PANTALLA DE INICIO ESTILO RETRO-MODERNO */
+        /* PANTALLA DE INICIO */
         #inicio { 
             position: absolute; inset: 0; background: var(--bg); z-index: 100; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; 
@@ -39,60 +38,68 @@
         }
 
         .btn-comenzar { 
-            background: var(--bg); color: var(--accent); border: none; padding: 25px 50px; 
+            background: var(--bg); color: var(--accent); border: none; padding: 20px 40px; 
             border-radius: 50px; font-size: 24px; font-weight: 800; cursor: pointer;
             box-shadow: 6px 6px 12px var(--shadow), -6px -6px 12px var(--light);
-            transition: all 0.2s ease;
         }
-        .btn-comenzar:active { box-shadow: inset 6px 6px 12px var(--shadow), inset -6px -6px 12px var(--light); }
 
-        /* HEADER Y BOTÓN SOS */
+        /* HEADER */
         header { 
-            padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            background: var(--bg); box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+            padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10;
         }
 
         .btn-sos {
-            background: #ff4d4d; color: white; border: 4px solid #cc0000;
-            padding: 12px 20px; border-radius: 15px; font-weight: 900; font-size: 18px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5); cursor: pointer;
-            box-shadow: 0 5px 0 #990000;
+            background: var(--danger); color: white; border: 3px solid #b22222;
+            padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 0 #7b1710;
         }
-        .btn-sos:active { transform: translateY(3px); box-shadow: 0 2px 0 #990000; }
 
-        /* GRILLA DE PRODUCTOS - BOTONES 3D */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px; }
+        /* SECCIÓN NOVEDOSA: LISTA DE COMPRAS */
+        .lista-compras {
+            background: #f1f5f9; padding: 10px 15px; height: 60px;
+            display: flex; align-items: center; gap: 10px; overflow-x: auto;
+            border-bottom: 2px solid var(--shadow);
+        }
+        .item-lista {
+            background: white; padding: 5px 12px; border-radius: 20px;
+            font-size: 14px; font-weight: bold; border: 1px solid var(--accent);
+            white-space: nowrap; display: flex; align-items: center; gap: 5px;
+        }
+
+        /* GRILLA DE PRODUCTOS AMPLIADA */
+        .grid { 
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
+            padding: 15px; max-height: 220px; overflow-y: auto;
+        }
         
         .btn-prod {
-            background: var(--bg); border: none; border-radius: 20px; padding: 15px 5px;
-            box-shadow: 6px 6px 12px var(--shadow), -6px -6px 12px var(--light);
+            background: var(--bg); border: none; border-radius: 15px; padding: 12px 5px;
+            box-shadow: 4px 4px 8px var(--shadow), -4px -4px 8px var(--light);
             display: flex; flex-direction: column; align-items: center; font-weight: bold;
-            cursor: pointer; transition: 0.2s;
+            cursor: pointer; font-size: 13px;
         }
-        .btn-prod span { font-size: 30px; margin-bottom: 5px; }
+        .btn-prod span { font-size: 24px; margin-bottom: 4px; }
         .btn-prod.active { box-shadow: inset 4px 4px 8px var(--shadow), inset -4px -4px 8px var(--light); color: var(--accent); }
 
-        /* MAPA DETALLADO */
+        /* MAPA */
         #map-area { 
-            flex: 1; margin: 20px; border-radius: 25px; background: #fff;
-            box-shadow: inset 8px 8px 16px #d1d9e6, inset -8px -8px 16px #ffffff;
-            position: relative; overflow: hidden; border: 3px solid var(--shadow);
+            flex: 1; margin: 10px; border-radius: 20px; background: #fff;
+            box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff;
+            position: relative; overflow: hidden; border: 2px solid var(--shadow);
         }
         canvas { width: 100%; height: 100%; display: block; }
 
         /* MODALES */
         .modal { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 200; 
+            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 200; 
         }
         .modal-box { 
-            background: var(--bg); padding: 40px; border-radius: 40px; text-align: center; width: 85%;
-            box-shadow: 20px 20px 60px #000; border: 2px solid var(--light);
+            background: var(--bg); padding: 30px; border-radius: 30px; text-align: center; width: 80%;
+            box-shadow: 10px 10px 30px #000; border: 1px solid var(--light);
         }
-        .btn-ok { 
-            width: 100%; padding: 20px; background: var(--accent); color: white; border: none; 
-            border-radius: 20px; font-size: 22px; font-weight: bold; margin-top: 20px;
-        }
+        .btn-ok { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -100,99 +107,124 @@
     <div class="app">
         <div id="inicio">
             <div class="welcome-card">
-                <div style="font-size: 80px;">🛒</div>
-                <h1 style="color: #2c3e50; font-size: 32px;">¡Hola!<br>Bienvenidos</h1>
-                <p style="font-size: 20px; color: #5d707f;">Toque el botón azul para empezar a comprar.</p>
+                <div style="font-size: 60px;">🛒</div>
+                <h1 style="color: #2c3e50;">¡Bienvenido!</h1>
+                <p>Tu asistente para comprar sin cansarte.</p>
             </div>
             <button class="btn-comenzar" onclick="empezar()">COMENZAR</button>
         </div>
 
         <header>
-            <div style="font-weight: 900; color: #2c3e50; font-size: 22px;">MI GUÍA</div>
-            <button class="btn-sos" onclick="showHelp()">🆘 AYUDA</button>
+            <div style="font-weight: 900; color: #2c3e50;">SUPER-GUÍA </div>
+            <button class="btn-sos" onclick="showModal('popSos')">🆘 AYUDA</button>
         </header>
+
+        <div class="lista-compras" id="listaVisual">
+            <span style="color: #64748b; font-size: 14px;">Lista:</span>
+            </div>
 
         <div class="grid">
             <button class="btn-prod" onclick="select('pan',this)"><span>🍞</span>Pan</button>
-            <button class="btn-prod" onclick="select('leche',this)"><span>🥛</span>Leche</button>
+            <button class="btn-prod" onclick="select('leche',this)"><span>🥛</span>Lácteos</button>
             <button class="btn-prod" onclick="select('fruta',this)"><span>🍎</span>Frutas</button>
             <button class="btn-prod" onclick="select('carne',this)"><span>🥩</span>Carnes</button>
-            <button class="btn-prod" onclick="select('aseo',this)"><span>🧽</span>Aseo</button>
-            <button class="btn-prod" onclick="select('salud',this)"><span>💊</span>Salud</button>
+            <button class="btn-prod" onclick="select('limp',this)"><span>🧽</span>Aseo</button>
+            <button class="btn-prod" onclick="select('bebida',this)"><span>🥤</span>Bebidas</button>
+            <button class="btn-prod" onclick="select('congelados',this)"><span>🍦</span>Helados</button>
+            <button class="btn-prod" onclick="select('mascotas',this)"><span>🐶</span>Mascotas</button>
+            <button class="btn-prod" onclick="select('snack',this)"><span>🍿</span>Snacks</button>
         </div>
 
         <div id="map-area"><canvas id="cv"></canvas></div>
 
-        <div style="padding:15px; text-align:center; font-weight:bold; color:#5d707f; background: rgba(255,255,255,0.5);">
-            Toca el mapa blanco para "caminar"
+        <div style="padding:10px; text-align:center; font-weight:bold; color:#5d707f; font-size: 13px;">
+            Toque el mapa para caminar hacia el producto
         </div>
     </div>
 
     <div id="popWin" class="modal"><div class="modal-box">
-        <h2 style="color:var(--accent); font-size: 35px;">📍 ¡AQUÍ ES!</h2>
-        <p style="font-size: 22px; font-weight: bold;">El producto que busca está frente a usted.</p>
-        <button class="btn-ok" onclick="closeAll()">ENTENDIDO</button>
+        <h2 style="color:var(--success)">📍 ¡LLEGASTE!</h2>
+        <p id="msgLlegada"></p>
+        <button class="btn-ok" onclick="closeModal()">LISTO</button>
     </div></div>
 
     <div id="popSos" class="modal"><div class="modal-box">
-        <h2 style="color:var(--danger); font-size: 35px;">🆘 AYUDA</h2>
-        <p style="font-size: 22px; font-weight: bold;">¡No se mueva!<br>Un asistente va en camino.</p>
-        <button class="btn-ok" style="background:#5d707f" onclick="closeAll()">CERRAR</button>
+        <h2 style="color:var(--danger)">🆘 AYUDA</h2>
+        <p>Quédate donde estás. Un asistente va en camino.</p>
+        <button class="btn-ok" style="background:#64748b" onclick="closeModal()">CERRAR</button>
     </div></div>
 
     <script>
         const canvas = document.getElementById('cv'); const ctx = canvas.getContext('2d');
+        const listaVisual = document.getElementById('listaVisual');
         let pos = { x: 300, y: 550 }; let target = null;
-        const pts = { pan:{x:120,y:120}, leche:{x:480,y:120}, fruta:{x:300,y:280}, carne:{x:120,y:420}, aseo:{x:480,y:420}, salud:{x:300,y:100} };
 
-        function empezar() { document.getElementById('inicio').style.display = 'none'; initMap(); }
-        function showHelp() { document.getElementById('popSos').style.display = 'flex'; }
-        function closeAll() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); target=null; document.querySelectorAll('.btn-prod').forEach(b=>b.classList.remove('active')); draw(); }
+        const pts = { 
+            pan:{x:100,y:100,n:"Pan"}, leche:{x:500,y:100,n:"Lácteos"}, fruta:{x:300,y:250,n:"Frutas"}, 
+            carne:{x:100,y:350,n:"Carnes"}, limp:{x:500,y:350,n:"Limpieza"}, bebida:{x:300,y:100,n:"Bebidas"},
+            congelados:{x:100,y:230,n:"Congelados"}, mascotas:{x:500,y:230,n:"Mascotas"}, snack:{x:300,y:400,n:"Snacks"}
+        };
 
-        function initMap() { canvas.width = 600; canvas.height = 600; draw(); }
+        function empezar() { document.getElementById('inicio').style.display='none'; init(); }
+        function showModal(id) { document.getElementById(id).style.display='flex'; }
+        function closeModal() { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
+
+        function init() { canvas.width=600; canvas.height=600; draw(); }
 
         function draw() {
             ctx.clearRect(0,0,600,600);
-            // Piso detallado
-            ctx.strokeStyle = "#eef2f7"; ctx.lineWidth = 2;
-            for(let i=0; i<600; i+=40){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,600); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(600,i); ctx.stroke(); }
+            ctx.strokeStyle="#f1f5f9"; ctx.lineWidth=1;
+            for(let i=0;i<600;i+=40){ ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,600);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(600,i);ctx.stroke(); }
             
-            // Estanterías con volumen
-            [[80,180,110,280],[245,180,110,280],[410,180,110,280]].forEach(s => {
-                ctx.fillStyle = "#a3b1c6"; ctx.fillRect(s[0]+8, s[1]+8, s[2], s[3]); // Sombra proyectada
-                ctx.fillStyle = "#ffffff"; ctx.fillRect(s[0], s[1], s[2], s[3]); // Cara superior
-                ctx.strokeStyle = "#5d707f"; ctx.lineWidth = 3; ctx.strokeRect(s[0], s[1], s[2], s[3]);
-                // Bordes de estantes internos
-                ctx.beginPath(); ctx.moveTo(s[0], s[1]+140); ctx.lineTo(s[0]+s[2], s[1]+140); ctx.stroke();
+            // Góndolas
+            ctx.fillStyle="#cbd5e1"; 
+            [[60,140,100,280],[250,140,100,280],[440,140,100,280]].forEach(s=>{
+                ctx.fillRect(s[0]+5,s[1]+5,s[2],s[3]); ctx.fillStyle="white";
+                ctx.fillRect(s[0],s[1],s[2],s[3]); ctx.strokeStyle="#94a3b8";
+                ctx.lineWidth=2; ctx.strokeRect(s[0],s[1],s[2],s[3]);
+                ctx.fillStyle="#cbd5e1";
             });
 
-            if (target) {
-                // Ruta Neumórfica
-                ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(pos.x, target.y+50); ctx.lineTo(target.x, target.y+50); ctx.lineTo(target.x, target.y);
-                ctx.shadowBlur = 10; ctx.shadowColor = "rgba(251, 191, 36, 0.5)";
-                ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 18; ctx.lineJoin="round"; ctx.stroke(); ctx.shadowBlur = 0;
-                ctx.font = "50px Arial"; ctx.fillText("📍",target.x-25,target.y+15);
+            if(target){
+                ctx.beginPath();ctx.moveTo(pos.x,pos.y);ctx.lineTo(pos.x,target.y+40);ctx.lineTo(target.x,target.y+40);ctx.lineTo(target.x,target.y);
+                ctx.strokeStyle="#fbbf24"; ctx.lineWidth=14; ctx.lineJoin="round"; ctx.stroke();
+                ctx.font="40px Arial"; ctx.fillText("📍",target.x-20,target.y+10);
             }
 
-            // Marcador "TÚ" estilo botón físico
-            ctx.beginPath(); ctx.arc(pos.x, pos.y, 28, 0, Math.PI*2);
-            ctx.fillStyle = "#1a73e8"; ctx.fill();
-            ctx.strokeStyle = "white"; ctx.lineWidth = 6; ctx.stroke();
-            ctx.fillStyle = "white"; ctx.font = "bold 18px Arial"; ctx.textAlign = "center"; ctx.fillText("TÚ",pos.x,pos.y+7);
+            ctx.beginPath(); ctx.arc(pos.x,pos.y,25,0,Math.PI*2); ctx.fillStyle="#1a73e8"; ctx.fill();
+            ctx.strokeStyle="white"; ctx.lineWidth=5; ctx.stroke();
+            ctx.fillStyle="white"; ctx.font="bold 16px Arial"; ctx.textAlign="center"; ctx.fillText("TÚ",pos.x,pos.y+6);
         }
 
-        function select(id, b) { target = pts[id]; document.querySelectorAll('.btn-prod').forEach(x => x.classList.remove('active')); b.classList.add('active'); draw(); }
-        
+        function select(id, b) { 
+            target = pts[id];
+            document.querySelectorAll('.btn-prod').forEach(x=>x.classList.remove('active'));
+            b.classList.add('active');
+            
+            // Añadir a lista visual si no está
+            if(!document.getElementById('item-'+id)){
+                const span = document.createElement('span');
+                span.id = 'item-'+id;
+                span.className = 'item-lista';
+                span.innerHTML = `${b.innerText} <small onclick="this.parentElement.remove()">✕</small>`;
+                listaVisual.appendChild(span);
+            }
+            draw(); 
+        }
+
         function move(cx, cy) {
             const r = canvas.getBoundingClientRect(); 
-            pos.x = (cx - r.left) * (600 / r.width); 
-            pos.y = (cy - r.top) * (600 / r.height);
-            if (target && Math.sqrt((pos.x-target.x)**2 + (pos.y-target.y)**2) < 55) { document.getElementById('popWin').style.display="flex"; }
+            pos.x = (cx-r.left)*(600/r.width); pos.y = (cy-r.top)*(600/r.height);
+            if(target && Math.sqrt((pos.x-target.x)**2+(pos.y-target.y)**2)<50){
+                document.getElementById('msgLlegada').innerText = `Has llegado a la sección de ${target.n}.`;
+                showModal('popWin');
+                target = null;
+            }
             draw();
         }
 
-        canvas.addEventListener('mousedown', e => move(e.clientX, e.clientY));
-        canvas.addEventListener('touchstart', e => { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); }, {passive: false});
+        canvas.addEventListener('mousedown',e=>move(e.clientX,e.clientY));
+        canvas.addEventListener('touchstart',e=>{e.preventDefault(); move(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
     </script>
 </body>
 </html>
