@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Súper Guía Pro - Accesibilidad Total</title>
+    <title>Súper Guía Pro - Ofertas Visibles</title>
     <style>
         :root {
-            --primary: #1a237e; /* Azul Navy: Confianza y Estabilidad */
-            --accent: #ffc107;  /* Amarillo: Visibilidad Máxima */
-            --success: #2e7d32; /* Verde: Salud y Frutas */
-            --danger: #d32f2f;  /* Rojo: Alerta y Ayuda */
-            --bg-light: #f5f5f5;
+            --primary: #1a237e; /* Azul Navy */
+            --accent: #ffc107;  /* Amarillo de alta visibilidad */
+            --promo-bg: #ff6d00; /* Naranja vibrante para ofertas */
+            --bg-light: #f8f9fa;
         }
 
         body { 
@@ -24,7 +23,7 @@
             box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
-        /* BIENVENIDA */
+        /* PANTALLA DE INICIO */
         #inicio { 
             position: absolute; inset: 0; background: var(--primary); z-index: 100; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; color: white;
@@ -33,49 +32,62 @@
         .btn-comenzar { 
             background: var(--accent); color: #000; border: none; padding: 22px 45px; 
             border-radius: 50px; font-size: 26px; font-weight: 900; cursor: pointer;
-            box-shadow: 0 10px 0 #c79100; transition: 0.1s;
+            box-shadow: 0 8px 0 #c79100;
         }
-        .btn-comenzar:active { transform: translateY(5px); box-shadow: 0 5px 0 #c79100; }
 
-        /* HEADER PROFESIONAL */
+        /* HEADER */
         header { 
             padding: 15px; display: flex; justify-content: space-between; align-items: center;
-            background: var(--primary); color: white;
+            background: var(--primary); color: white; flex-shrink: 0;
         }
 
-        .btn-sos {
-            background: var(--danger); color: white; border: 2px solid white;
-            padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+        /* SECCIÓN DE DESCUENTOS ATRACTIVOS (CUPONES) */
+        .ofertas-container {
+            background: #fff; padding: 15px; border-bottom: 5px solid var(--promo-bg);
+            flex-shrink: 0;
         }
 
-        /* SECCIÓN DE DESCUENTOS - NEUMORFISMO */
-        .promo-banner {
-            background: #fff3e0; padding: 12px; border-bottom: 4px solid var(--accent);
-        }
-        .promo-item {
-            background: white; border-radius: 10px; padding: 10px; display: flex; 
-            justify-content: space-between; align-items: center; font-weight: bold;
-            box-shadow: 4px 4px 10px #ddd; cursor: pointer; margin-bottom: 5px;
+        .titulo-ofertas {
+            font-size: 18px; font-weight: 900; color: var(--promo-bg);
+            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
         }
 
-        /* GRILLA DE PRODUCTOS AMPLIADA */
+        .scroll-ofertas {
+            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px;
+            scrollbar-width: none; /* Ocultar scroll en Firefox */
+        }
+        .scroll-ofertas::-webkit-scrollbar { display: none; } /* Ocultar scroll en Chrome */
+
+        .cupon {
+            min-width: 160px; background: var(--promo-bg); color: white;
+            border-radius: 15px; padding: 15px; position: relative;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+            border: 2px dashed white; cursor: pointer;
+            text-align: center; transition: 0.2s;
+        }
+        .cupon:active { transform: scale(0.95); }
+        .cupon-tag { background: white; color: var(--promo-bg); padding: 2px 8px; border-radius: 5px; font-weight: 900; font-size: 12px; margin-bottom: 5px; display: inline-block; }
+        .cupon-name { font-size: 16px; font-weight: bold; display: block; }
+        .cupon-desc { font-size: 22px; font-weight: 900; display: block; }
+
+        /* GRILLA PRODUCTOS */
         .grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
-            padding: 15px; max-height: 200px; overflow-y: auto; background: white;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; 
+            padding: 10px; max-height: 180px; overflow-y: auto; background: white;
         }
         
         .btn-prod {
-            background: #fff; border: 2px solid #ddd; border-radius: 15px; padding: 15px 5px;
+            background: #fff; border: 2px solid #ddd; border-radius: 12px; padding: 10px 5px;
             display: flex; flex-direction: column; align-items: center; font-weight: bold;
-            cursor: pointer; transition: 0.3s;
+            cursor: pointer; font-size: 13px;
         }
-        .btn-prod.active { border-color: var(--primary); background: #e8eaf6; transform: scale(0.95); }
-        .btn-prod span { font-size: 28px; }
+        .btn-prod.active { border-color: var(--primary); background: #e8eaf6; }
+        .btn-prod span { font-size: 24px; }
 
-        /* MAPA CON ALTO CONTRASTE */
+        /* MAPA */
         #map-area { 
-            flex: 1; margin: 12px; border-radius: 20px; background: #ffffff;
-            border: 4px solid var(--primary); position: relative; overflow: hidden;
+            flex: 1; margin: 10px; border-radius: 20px; background: #ffffff;
+            border: 3px solid var(--primary); position: relative; overflow: hidden;
         }
         canvas { width: 100%; height: 100%; display: block; }
 
@@ -85,30 +97,45 @@
             background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 200; 
         }
         .modal-box { 
-            background: white; padding: 35px; border-radius: 30px; text-align: center; width: 85%;
+            background: white; padding: 30px; border-radius: 25px; text-align: center; width: 80%;
             border: 5px solid var(--primary);
         }
-        .btn-ok { width: 100%; padding: 20px; background: var(--primary); color: white; border: none; border-radius: 15px; font-size: 22px; font-weight: bold; margin-top: 15px; }
+        .btn-ok { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; margin-top: 15px; }
     </style>
 </head>
 <body>
 
     <div class="app">
         <div id="inicio">
-            <h1 style="font-size: 40px;">🛒<br>¡Buen día!</h1>
-            <p style="font-size: 22px;">Le ayudamos a encontrar sus productos hoy.</p>
+            <h1 style="font-size: 40px; margin:0;">🛒</h1>
+            <h2 style="font-size: 32px; margin: 10px 0;">¡Bienvenido!</h2>
+            <p style="font-size: 18px;">Toque el botón para comprar y ahorrar.</p>
             <button class="btn-comenzar" onclick="empezar()">COMENZAR</button>
         </div>
 
         <header>
-            <div style="font-weight: 900; font-size: 22px;">SÚPER GUÍA</div>
-            <button class="btn-sos" onclick="showModal('popSos')">🆘 AYUDA</button>
+            <div style="font-weight: 900; font-size: 20px;">SÚPER GUÍA</div>
+            <button style="background:#d32f2f; color:white; border:2px solid white; padding:8px 12px; border-radius:10px; font-weight:bold;" onclick="showModal('popSos')">🆘 AYUDA</button>
         </header>
 
-        <div class="promo-banner">
-            <div style="font-weight: bold; color: #e65100; margin-bottom: 5px;">📍 OFERTAS CERCANAS:</div>
-            <div class="promo-item" onclick="select('fruta', this)">
-                <span>🍎 Manzanas Rojas</span> <span style="color:var(--danger)">-30%</span>
+        <div class="ofertas-container">
+            <div class="titulo-ofertas">🔥 ¡DESCUENTOS PARA TI!</div>
+            <div class="scroll-ofertas">
+                <div class="cupon" onclick="select('pan', this)">
+                    <span class="cupon-tag">CUPÓN</span>
+                    <span class="cupon-name">Panadería</span>
+                    <span class="cupon-desc">-20%</span>
+                </div>
+                <div class="cupon" style="background: #2e7d32; border-color: white;" onclick="select('fruta', this)">
+                    <span class="cupon-tag">OFERTA</span>
+                    <span class="cupon-name">Frutas</span>
+                    <span class="cupon-desc">2x1</span>
+                </div>
+                <div class="cupon" style="background: #1a237e;" onclick="select('leche', this)">
+                    <span class="cupon-tag">CUPÓN</span>
+                    <span class="cupon-name">Lácteos</span>
+                    <span class="cupon-desc">-15%</span>
+                </div>
             </div>
         </div>
 
@@ -128,14 +155,14 @@
     </div>
 
     <div id="popWin" class="modal"><div class="modal-box">
-        <h2 style="color:var(--success); font-size: 30px;">🎯 ¡AQUÍ ESTÁ!</h2>
-        <p style="font-size: 20px; font-weight: bold;" id="msgLlegada"></p>
+        <h2 style="color:#2e7d32">🎯 ¡LLEGÓ!</h2>
+        <p id="msgLlegada" style="font-weight:bold;"></p>
         <button class="btn-ok" onclick="closeModal()">LISTO</button>
     </div></div>
 
     <div id="popSos" class="modal"><div class="modal-box">
-        <h2 style="color:var(--danger)">🆘 AYUDA SOLICITADA</h2>
-        <p style="font-size: 18px;">Quédese tranquilo. Un empleado de la tienda viene a buscarlo.</p>
+        <h2 style="color:#d32f2f">🆘 AYUDA</h2>
+        <p>Un asistente de la tienda está en camino.</p>
         <button class="btn-ok" style="background:#555" onclick="closeModal()">CERRAR</button>
     </div></div>
 
@@ -156,11 +183,9 @@
 
         function draw() {
             ctx.clearRect(0,0,600,600);
-            // Cuadrícula de guía
             ctx.strokeStyle="#e0e0e0"; ctx.lineWidth=1;
             for(let i=0;i<600;i+=50){ ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,600);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(600,i);ctx.stroke(); }
             
-            // Góndolas con color Navy
             ctx.fillStyle="#1a237e11"; 
             [[60,140,110,280],[245,140,110,280],[430,140,110,280]].forEach(s=>{
                 ctx.fillRect(s[0],s[1],s[2],s[3]);
@@ -169,12 +194,10 @@
 
             if(target){
                 ctx.beginPath();ctx.moveTo(pos.x,pos.y);ctx.lineTo(pos.x,target.y+40);ctx.lineTo(target.x,target.y+40);ctx.lineTo(target.x,target.y);
-                ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent'); 
-                ctx.lineWidth=18; ctx.lineJoin="round"; ctx.stroke();
+                ctx.strokeStyle="#ffc107"; ctx.lineWidth=18; ctx.lineJoin="round"; ctx.stroke();
                 ctx.font="45px Arial"; ctx.fillText("📍",target.x-22,target.y+15);
             }
 
-            // Usuario: El punto más visible
             ctx.beginPath(); ctx.arc(pos.x,pos.y,28,0,Math.PI*2); ctx.fillStyle="#4285F4"; ctx.fill();
             ctx.strokeStyle="white"; ctx.lineWidth=6; ctx.stroke();
             ctx.fillStyle="white"; ctx.font="bold 18px Arial"; ctx.textAlign="center"; ctx.fillText("TÚ",pos.x,pos.y+7);
@@ -191,7 +214,7 @@
             const r = canvas.getBoundingClientRect(); 
             pos.x = (cx-r.left)*(600/r.width); pos.y = (cy-r.top)*(600/r.height);
             if(target && Math.sqrt((pos.x-target.x)**2+(pos.y-target.y)**2)<55){
-                document.getElementById('msgLlegada').innerText = `El pasillo de ${target.n} está frente a usted.`;
+                document.getElementById('msgLlegada').innerText = `Estás en ${target.n}.`;
                 showModal('popWin'); target = null;
             }
             draw();
