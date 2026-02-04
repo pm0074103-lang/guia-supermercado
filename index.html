@@ -23,16 +23,23 @@
             box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
-        /* PANTALLA DE INICIO - CARRITO MÁS GRANDE */
+        /* PANTALLA DE INICIO CON ANIMACIÓN */
         #inicio { 
             position: absolute; inset: 0; background: var(--primary); z-index: 1000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; color: white;
         }
 
-        .carrito-grande {
-            font-size: 150px; /* Tamaño aumentado como pediste */
+        .carrito-animado {
+            font-size: 160px; /* Tamaño gigante */
             margin-bottom: 20px;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            animation: saltito 2s infinite; /* Animación de salto */
+        }
+
+        @keyframes saltito {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-30px);}
+            60% {transform: translateY(-15px);}
         }
 
         .btn-comenzar { 
@@ -42,67 +49,25 @@
         }
         .btn-comenzar:active { transform: translateY(4px); box-shadow: 0 4px 0 #c79100; }
 
-        /* HEADER */
-        header { 
-            padding: 15px; display: flex; justify-content: space-between; align-items: center;
-            background: var(--primary); color: white; flex-shrink: 0;
-        }
+        /* HEADER Y SECCIONES */
+        header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .btn-sos { background: #d32f2f; color: white; border: 2px solid white; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* SECCIÓN DE DESCUENTOS */
-        .ofertas-container {
-            background: #fff; padding: 15px; border-bottom: 5px solid var(--promo-bg);
-            flex-shrink: 0;
-        }
-
-        .titulo-ofertas {
-            font-size: 18px; font-weight: 900; color: var(--promo-bg);
-            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-        }
-
-        .scroll-ofertas {
-            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px;
-            scrollbar-width: none;
-        }
+        .ofertas-container { background: #fff; padding: 15px; border-bottom: 5px solid var(--promo-bg); flex-shrink: 0; }
+        .scroll-ofertas { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .scroll-ofertas::-webkit-scrollbar { display: none; }
 
-        .cupon {
-            min-width: 160px; background: var(--promo-bg); color: white;
-            border-radius: 15px; padding: 15px; position: relative;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
-            border: 2px dashed white; cursor: pointer;
-            text-align: center;
-        }
+        .cupon { min-width: 160px; background: var(--promo-bg); color: white; border-radius: 15px; padding: 15px; border: 2px dashed white; cursor: pointer; text-align: center; }
 
-        /* GRILLA PRODUCTOS */
-        .grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; 
-            padding: 10px; max-height: 180px; overflow-y: auto; background: white;
-        }
-        
-        .btn-prod {
-            background: #fff; border: 2px solid #ddd; border-radius: 12px; padding: 10px 5px;
-            display: flex; flex-direction: column; align-items: center; font-weight: bold;
-            cursor: pointer; font-size: 13px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px; max-height: 180px; overflow-y: auto; background: white; }
+        .btn-prod { background: #fff; border: 2px solid #ddd; border-radius: 12px; padding: 10px 5px; display: flex; flex-direction: column; align-items: center; font-weight: bold; cursor: pointer; font-size: 13px; }
         .btn-prod.active { border-color: var(--primary); background: #e8eaf6; }
-        .btn-prod span { font-size: 24px; }
 
-        /* MAPA */
-        #map-area { 
-            flex: 1; margin: 10px; border-radius: 20px; background: #ffffff;
-            border: 4px solid var(--primary); position: relative; overflow: hidden;
-        }
+        #map-area { flex: 1; margin: 10px; border-radius: 20px; background: #fff; border: 4px solid var(--primary); position: relative; overflow: hidden; }
         canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 
-        /* MODALES */
-        .modal { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; 
-        }
-        .modal-box { 
-            background: white; padding: 30px; border-radius: 25px; text-align: center; width: 80%;
-            border: 5px solid var(--primary);
-        }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-box { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 80%; border: 5px solid var(--primary); }
         .btn-ok { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
@@ -110,28 +75,23 @@
 
     <div class="app">
         <div id="inicio">
-            <div class="carrito-grande">🛒</div>
-            <h2 style="font-size: 35px; margin: 10px 0;">¡Bienvenido!</h2>
-            <p style="font-size: 20px; margin-bottom: 30px;">Toque el botón para comenzar.</p>
+            <div class="carrito-animado">🛒</div>
+            <h2 style="font-size: 35px; margin: 10px 0;">¡Hola!</h2>
+            <p style="font-size: 20px; margin-bottom: 30px;">Toque el botón amarillo para empezar.</p>
             <button class="btn-comenzar" onclick="empezar()">COMENZAR</button>
         </div>
 
         <header>
             <div style="font-weight: 900; font-size: 20px;">SÚPER GUÍA</div>
-            <button style="background:#d32f2f; color:white; border:2px solid white; padding:10px 15px; border-radius:12px; font-weight:bold; cursor:pointer;" onclick="showModal('popSos')">🆘 AYUDA</button>
+            <button class="btn-sos" onclick="showModal('popSos')">🆘 AYUDA</button>
         </header>
 
         <div class="ofertas-container">
-            <div class="titulo-ofertas">🔥 ¡DESCUENTOS PARA TI!</div>
+            <div style="font-weight: 900; color: var(--promo-bg); margin-bottom: 10px;">🔥 OFERTAS:</div>
             <div class="scroll-ofertas">
-                <div class="cupon" onclick="select('pan', this)">
-                    <span style="background:white; color:var(--promo-bg); padding:2px 8px; border-radius:5px; font-weight:900; font-size:12px; margin-bottom:5px; display:inline-block;">CUPÓN</span>
-                    <b style="display:block;">Panadería -20%</b>
-                </div>
-                <div class="cupon" style="background: #2e7d32; border-color: white;" onclick="select('fruta', this)">
-                    <span style="background:white; color:#2e7d32; padding:2px 8px; border-radius:5px; font-weight:900; font-size:12px; margin-bottom:5px; display:inline-block;">OFERTA</span>
-                    <b style="display:block;">Frutas 2x1</b>
-                </div>
+                <div class="cupon" onclick="select('pan')"><b>Panadería -20%</b></div>
+                <div class="cupon" style="background: #2e7d32;" onclick="select('fruta')"><b>Frutas 2x1</b></div>
+                <div class="cupon" style="background: var(--primary);" onclick="select('leche')"><b>Lácteos -15%</b></div>
             </div>
         </div>
 
@@ -206,7 +166,7 @@
             const r = canvas.getBoundingClientRect(); 
             pos.x = (cx-r.left)*(600/r.width); pos.y = (cy-r.top)*(600/r.height);
             if(target && Math.sqrt((pos.x-target.x)**2+(pos.y-target.y)**2)<55){
-                document.getElementById('msgLlegada').innerText = `Ha llegado a la sección de ${target.n}.`;
+                document.getElementById('msgLlegada').innerText = `Estás en ${target.n}.`;
                 showModal('popWin'); target = null;
             }
             draw();
@@ -216,4 +176,3 @@
     </script>
 </body>
 </html>
-
